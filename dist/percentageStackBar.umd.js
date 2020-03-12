@@ -1,24 +1,11 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.percentageStackBar = {}));
-}(this, function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/cloneDeep')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'lodash/cloneDeep'], factory) :
+  (global = global || self, factory(global.percentageStackBar = {}, global.cloneDeep));
+}(this, function (exports, cloneDeep) { 'use strict';
 
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
-  //
+  cloneDeep = cloneDeep && cloneDeep.hasOwnProperty('default') ? cloneDeep['default'] : cloneDeep;
+
   //
   var script = {
     name: 'percentageStackBar',
@@ -29,7 +16,12 @@
           return Array.prototype.constructor();
         },
         validator: function validator(v) {
-          if (!v.find(function (i) {
+          if (v.find(function (i) {
+            return typeof i === 'string';
+          })) {
+            // console.error('The values for pencentage-stack-bar should not be string')
+            return false;
+          } else if (undefined === v.find(function (i) {
             return /^\d{1,2}(\.\d{1,})?$/g.test(i);
           })) {
             // console.error('The values for pencentage-stack-bar should be numberic')
@@ -55,11 +47,66 @@
         default: function _default() {
           return true;
         }
+      },
+      spaceForZero: {
+        tyep: Number,
+        default: function _default() {
+          return 5;
+        }
       }
     },
+
+    data() {
+      return {
+        dto: Array.prototype.constructor()
+      };
+    },
+
+    mounted() {
+      this.value && this.build(this.value);
+    },
+
     methods: {
+      build(d) {
+        var _this = this;
+
+        if (!Array.isArray(d)) {
+          return;
+        }
+
+        if (undefined === d.find(function (i) {
+          return i === 0;
+        })) {
+          this.dto = cloneDeep(d).map(function (i) {
+            return {
+              'desc': i,
+              'val': i
+            };
+          });
+          return;
+        }
+
+        var zeroCnt = d.filter(function (i) {
+          return i === 0;
+        }).length;
+
+        if (zeroCnt === d.length) {
+          this.dto = Array(d.length).fill({
+            'desc': 0,
+            'val': (100 / d.length).toFixed(3)
+          });
+        } else {
+          this.dto = d.map(function (i) {
+            return {
+              'desc': i,
+              'val': i === 0 ? _this.spaceForZero : ((100 - zeroCnt * _this.spaceForZero) * i / 100).toFixed(3)
+            };
+          });
+        }
+      },
+
       validator() {
-        if (!this.value.find(function (i) {
+        if (undefined === this.value.find(function (i) {
           return /^\d{1,2}(\.\d{1,})?$/g.test(i);
         })) {
           return false;
@@ -70,6 +117,12 @@
         }
 
         return true;
+      }
+
+    },
+    watch: {
+      value(v) {
+        this.build(v);
       }
 
     }
@@ -173,17 +226,17 @@
             _c(
               "div",
               { staticClass: "psb-stk" },
-              _vm._l(_vm.value, function(item, index) {
+              _vm._l(_vm.dto, function(item, index) {
                 return _c(
                   "div",
                   {
                     key: index,
                     staticClass: "psb-stk-v",
-                    style: { height: Number(item) + "%" }
+                    style: { height: Number(item["val"]) + "%" }
                   },
                   [
-                    _c("div", { staticClass: "vl" }, [
-                      _vm._v(_vm._s(Number(item) + "%"))
+                    _c("span", { staticClass: "vl" }, [
+                      _vm._v(_vm._s(Number(item["desc"]) + "%"))
                     ])
                   ]
                 )
@@ -213,7 +266,7 @@
     /* style */
     const __vue_inject_styles__ = undefined;
     /* scoped */
-    const __vue_scope_id__ = "data-v-69d9c986";
+    const __vue_scope_id__ = "data-v-0ded51e4";
     /* module identifier */
     const __vue_module_identifier__ = undefined;
     /* functional template */
