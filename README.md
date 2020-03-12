@@ -34,7 +34,6 @@ export default {
 }
 ```
 
-#### screenshots
+#### Screenshots
 
 ![](./screenshots/img@2x.png)
-![img@2x.png](https://i.loli.net/2020/03/10/RKxzeZM9UTBWCO5.png)
