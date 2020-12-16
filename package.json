@@ -1,6 +1,6 @@
 {
   "name": "@litt1e-p/percentage-stack-bar",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "a stack bar with percentage view for vue",
   "config": {
     "libName": "percentageStackBar"
@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/litt1e-p/percentageStackBar#readme",
   "dependencies": {
-    "vue": "^2.6.10",
-    "core-js": "^3.8.1"
+    "vue": "^2.6.12",
+    "core-js": "^3.8.1",
+    "regenerator-runtime": "^0.13.7"
   }
 }
