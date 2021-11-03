@@ -1,6 +1,6 @@
 # PercentageStackBar
 
-stack bar with percentage view for vue
+stack bar with percentage view for vue2.x
 
 #### Installation
 
